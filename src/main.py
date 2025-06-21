@@ -2,6 +2,7 @@ from FacialRecognition.input import get_video_capture
 from FacialRecognition.feature_extraction import FaceMeshProcessor
 from FacialRecognition.output import draw_face_landmarks
 from FacialRecognition.inference import extract_features, analyze_behavior
+from FacialRecognition.output import write_results_to_frame
 import cv2 as cv
 
 
@@ -22,21 +23,7 @@ def main(cap):
                 features = extract_features(face_landmarks, frame.shape)
                 traits = analyze_behavior(features)
 
-                # Display traits on frame
-
-                frame = cv.flip(frame, 1)
-                y = 30
-                for trait, score in traits.items():
-                    cv.putText(
-                        frame,
-                        f"{trait}: {score:.2f}",
-                        (10, y),
-                        cv.FONT_HERSHEY_SIMPLEX,
-                        0.6,
-                        (0, 255, 255),
-                        2,
-                    )
-                    y += 25
+                frame = write_results_to_frame(cv.flip(frame, 1), traits)
 
         cv.imshow("FaceMesh Feed", frame)
 
