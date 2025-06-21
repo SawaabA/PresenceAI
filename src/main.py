@@ -9,6 +9,7 @@ __updated__ = Sat Jun 21 2025
 -------------------------------------------------------
 """
 
+from FacialRecognition.preprocessing import resize_frame
 from FacialRecognition.input import get_video_capture
 from FacialRecognition.feature_extraction import FaceMeshProcessor
 from FacialRecognition.output import draw_face_landmarks
@@ -25,6 +26,7 @@ def main(cap):
         if not success:
             print("Frame capture failed.")
             continue
+        frame = resize_frame(frame)
 
         results = face_mesh_processor.process_frame(frame)
 
