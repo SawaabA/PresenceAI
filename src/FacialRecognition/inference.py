@@ -1,3 +1,15 @@
+"""-------------------------------------------------------
+PresenceAI: Module Description Here
+-------------------------------------------------------
+Author:  JD
+ID:      91786
+Uses:    OpenCV
+Version:  1.0.9
+__updated__ = Sat Jun 21 2025
+-------------------------------------------------------
+"""
+
+
 def extract_features(landmarks, image_shape):
     h, w, _ = image_shape
     coords = [(int(l.x * w), int(l.y * h)) for l in landmarks.landmark]

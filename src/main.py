@@ -1,3 +1,14 @@
+"""-------------------------------------------------------
+PresenceAI: Module Description Here
+-------------------------------------------------------
+Author:  JD
+ID:      91786
+Uses:    OpenCV
+Version:  1.0.9
+__updated__ = Sat Jun 21 2025
+-------------------------------------------------------
+"""
+
 from FacialRecognition.input import get_video_capture
 from FacialRecognition.feature_extraction import FaceMeshProcessor
 from FacialRecognition.output import draw_face_landmarks
