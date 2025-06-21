@@ -1,0 +1,29 @@
+@startuml FacialExpressionRecongition
+
+skinparam handwritten true
+skinparam shadowing false
+
+rectangle "Video/Image Feed" as videoFeed #LightBlue
+note right: Live webcam / recorded video / image
+
+rectangle "Preprocessing" as preprocessing #LightGreen
+note right: Resize, normalize, face detection
+
+rectangle "Facial Landmark Detection" as landmarkDetection #LightCyan
+note right: Dlib / MediaPipe / OpenFace
+
+rectangle "Feature Extraction (Action Units, Gaze,\nEmotions, Head Pose, Blink Rate)" as featureExtraction #LightSalmon
+
+rectangle "Inference Module (ML/DL Classifier)" as inferenceModule #LightYellow
+note right: Trained model: SVM / RandomForest / LSTM
+
+rectangle "Output Layer / Dashboard / API" as outputLayer #LightGrey
+note right: Text / Graphs / Alerts
+
+videoFeed --> preprocessing
+preprocessing --> landmarkDetection
+landmarkDetection --> featureExtraction
+featureExtraction --> inferenceModule
+inferenceModule --> outputLayer
+
+@enduml
