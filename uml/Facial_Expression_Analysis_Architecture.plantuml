@@ -1,0 +1,62 @@
+@startumlFacial Expression Analysis Architecture
+title Facial Expression Analysis Architecture
+
+actor User
+
+rectangle "Input Module" {
+  [Video Feed\n(Webcam/File)]
+  [Image Capture]
+}
+
+rectangle "Preprocessing Module" {
+  [Frame Resize/Normalize]
+  [Face Detection]
+}
+
+rectangle "Landmark Detection" {
+  [Facial Landmarks\n(MediaPipe/Dlib/OpenFace)]
+}
+
+rectangle "Feature Extraction" {
+  [Gaze Estimation]
+  [Head Pose Estimation]
+  [Blink Detection]
+  [Action Units (AUs)]
+  [Emotion Detection\n(DeepFace/FER+)]
+}
+
+rectangle "Inference Module" {
+  [ML/DL Classifier\n(SVM, RandomForest, LSTM)]
+  [Score Aggregator\n(Confidence, Engagement,\nNervousness, Authenticity)]
+}
+
+rectangle "Output Module" {
+  [Live Overlay\n(OpenCV)]
+  [Text Logs]
+  [Web Dashboard\n(Streamlit/Flask)]
+}
+
+User --> [Video Feed\n(Webcam/File)]
+[Video Feed\n(Webcam/File)] --> [Frame Resize/Normalize]
+[Image Capture] --> [Frame Resize/Normalize]
+
+[Frame Resize/Normalize] --> [Face Detection]
+[Face Detection] --> [Facial Landmarks\n(MediaPipe/Dlib/OpenFace)]
+[Facial Landmarks\n(MediaPipe/Dlib/OpenFace)] --> [Gaze Estimation]
+[Facial Landmarks\n(MediaPipe/Dlib/OpenFace)] --> [Head Pose Estimation]
+[Facial Landmarks\n(MediaPipe/Dlib/OpenFace)] --> [Blink Detection]
+[Facial Landmarks\n(MediaPipe/Dlib/OpenFace)] --> [Action Units (AUs)]
+[Facial Landmarks\n(MediaPipe/Dlib/OpenFace)] --> [Emotion Detection\n(DeepFace/FER+)]
+
+[Gaze Estimation] --> [ML/DL Classifier\n(SVM, RandomForest, LSTM)]
+[Head Pose Estimation] --> [ML/DL Classifier\n(SVM, RandomForest, LSTM)]
+[Blink Detection] --> [ML/DL Classifier\n(SVM, RandomForest, LSTM)]
+[Action Units (AUs)] --> [ML/DL Classifier\n(SVM, RandomForest, LSTM)]
+[Emotion Detection\n(DeepFace/FER+)] --> [ML/DL Classifier\n(SVM, RandomForest, LSTM)]
+
+[ML/DL Classifier\n(SVM, RandomForest, LSTM)] --> [Score Aggregator\n(Confidence, Engagement,\nNervousness, Authenticity)]
+[Score Aggregator\n(Confidence, Engagement,\nNervousness, Authenticity)] --> [Live Overlay\n(OpenCV)]
+[Score Aggregator\n(Confidence, Engagement,\nNervousness, Authenticity)] --> [Text Logs]
+[Score Aggregator\n(Confidence, Engagement,\nNervousness, Authenticity)] --> [Web Dashboard\n(Streamlit/Flask)]
+
+@enduml
