@@ -11,8 +11,7 @@ __updated__ = Sat Jun 21 2025
 
 from FacialRecognition.preprocessing import resize_frame
 from FacialRecognition.input import get_video_capture
-from FacialRecognition.feature_extraction import FaceDetector
-from FacialRecognition.feature_extraction import FaceMeshProcessor
+from FacialRecognition.feature_extraction import Detector
 from FacialRecognition.feature_extraction import extract_features
 from FacialRecognition.output import draw_face_landmarks
 from FacialRecognition.inference import analyze_behavior
@@ -21,8 +20,7 @@ import cv2 as cv
 
 
 def main(cap):
-    face_detector = FaceDetector()
-    face_mesh_processor = FaceMeshProcessor()
+    detector = Detector()
 
     while cap.isOpened():
         success, frame = cap.read()
@@ -30,11 +28,11 @@ def main(cap):
             print("Frame capture failed.")
             continue
 
-        face = face_detector.process_frame(frame)
+        face = detector.detect_face(frame)
 
         if face is not None:
 
-            results = face_mesh_processor.process_frame(face)
+            results = detector.process_face(face)
 
             if results.multi_face_landmarks:
                 for face_landmarks in results.multi_face_landmarks:
