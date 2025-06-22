@@ -3,6 +3,7 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+emotions_log.csv
 
 Keys.txt
 # C extensions
