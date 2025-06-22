@@ -12,7 +12,6 @@ __updated__ = Sat Jun 21 2025
 from FacialRecognition.preprocessing import resize_frame
 from FacialRecognition.input import get_video_capture
 from FacialRecognition.feature_extraction import Detector
-from FacialRecognition.feature_extraction import extract_features
 from FacialRecognition.output import draw_face_landmarks
 from FacialRecognition.output import write_results_to_frame
 from FacialRecognition.inference import FrameAnalyzer
