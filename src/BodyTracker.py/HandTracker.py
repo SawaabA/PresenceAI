@@ -1,19 +1,19 @@
 import cv2
 import mediapipe as mp
 import time
-from pymongo import MongoClient
-from dotenv import load_dotenv
 import os
 import datetime
-
-# === Load API keys from Keys.txt ===
-load_dotenv("Keys.txt")
-MONGO_URI = os.getenv("MONGO_URI")
+from pymongo import MongoClient
 
 # === Connect to MongoDB ===
+MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
 db = client["presenceAI"]
-collection = db["body_language_feedback"]
+sessions = db["sessions"]
+
+# === Set session ID (must match the one used by FullBodyTracker) ===
+SESSION_ID = os.getenv("SESSION_ID")  # Recommended: pass this from SessionManager
+USER_ID = "sawaab"
 
 # === Initialize MediaPipe Hand Tracking ===
 mp_hands = mp.solutions.hands
@@ -25,9 +25,11 @@ cap = cv2.VideoCapture(0)
 prev_coords = None
 static_frames = 0
 total_frames = 0
+total_movement = 0
+high_activity_frames = 0
 start_time = time.time()
 
-print("📷 Tracking started... Press ESC to stop.")
+print("🖐️ Hand Tracking started... Press ESC to stop.")
 
 while cap.isOpened():
     success, frame = cap.read()
@@ -52,8 +54,11 @@ while cap.isOpened():
                 abs(x1 - x2) + abs(y1 - y2)
                 for (x1, y1), (x2, y2) in zip(hand_coords, prev_coords)
             ])
+            total_movement += movement
             if movement < 0.01:
                 static_frames += 1
+            if movement > 0.1:
+                high_activity_frames += 1
         prev_coords = hand_coords
 
     total_frames += 1
@@ -65,19 +70,22 @@ while cap.isOpened():
 cap.release()
 cv2.destroyAllWindows()
 
-# === Final Static Ratio ===
+# === Final Metrics ===
 duration = int(time.time() - start_time)
 static_ratio = static_frames / total_frames if total_frames > 0 else 0.0
+total_movement = round(total_movement, 3)
+high_activity_ratio = high_activity_frames / total_frames if total_frames > 0 else 0.0
 
-# === Insert result into MongoDB ===
-entry = {
-    "user_id": "sawaab",
-    "speech_id": f"speech_{int(time.time())}",
-    "timestamp": datetime.datetime.utcnow(),
-    "duration_sec": duration,
-    "hand_static_ratio": round(static_ratio, 3),
-    "feedback": f"Hands were still {round(static_ratio*100, 1)}% of the time."
-}
+# === Update MongoDB document ===
+sessions.update_one(
+    {"session_id": SESSION_ID},
+    {"$set": {
+        "hand_tracking": {
+            "static_ratio": round(static_ratio, 3),
+            "total_movement": total_movement,
+            "high_activity_ratio": round(high_activity_ratio, 3)
+        }
+    }}
+)
 
-collection.insert_one(entry)
-print(f"\n✅ Inserted to MongoDB!\nRatio: {entry['hand_static_ratio']}\nFeedback: {entry['feedback']}")
+print(f"✅ Hand tracking data added to MongoDB (session_id: {SESSION_ID})")

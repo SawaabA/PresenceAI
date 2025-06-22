@@ -37,7 +37,7 @@ class CSVLogger:
                     ]
                 )
 
-    def maybe_log(self, metrics):
+    def log_results(self, metrics):
         current_time = time.time()
         if current_time - self.last_logged_time >= 1.0:
             with open(self.filename, mode="a", newline="") as file:
