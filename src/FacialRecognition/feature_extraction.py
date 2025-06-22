@@ -13,6 +13,37 @@ import cv2 as cv
 import mediapipe as mp
 
 
+class FaceDetector:
+    def __init__(self, detection_confidence=0.5):
+        self.face_detection = mp.solutions.face_detection.FaceDetection(
+            model_selection=1,
+            min_detection_confidence=detection_confidence,
+        )
+
+    def process_frame(self, frame):
+        rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+        results = self.face_detection.process(rgb_frame)
+
+        if results.detections:
+            h, w, _ = frame.shape
+            margin = int(h * 0.1)
+            for detection in results.detections:
+                bboxC = detection.location_data.relative_bounding_box
+                x = int(bboxC.xmin * w)
+                y = int(bboxC.ymin * h)
+                width = int(bboxC.width * w)
+                height = int(bboxC.height * h)
+
+                x1 = max(x - margin, 0)
+                y1 = max(y - margin, 0)
+                x2 = min(x + width + margin, w)
+                y2 = min(y + height + margin, h)
+
+                cropped_face = frame[y1:y2, x1:x2]
+                return cropped_face
+        return None
+
+
 class FaceMeshProcessor:
     def __init__(self):
         self.face_mesh = mp.solutions.face_mesh.FaceMesh(
