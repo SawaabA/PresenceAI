@@ -159,6 +159,7 @@ class FrameAnalyzer:
     def results(self):
         state_estimates = self.estimate_states()
         return {
+            "Time": round(time.time() - self.start_time, 2),
             "Total Frames": self.frame_counter,
             "Blink Count": self.blink_counter,
             "Head Tilt Count": self.head_tilt_counter,
@@ -176,3 +177,12 @@ class FrameAnalyzer:
         self.__init__(
             self.ear_threshold, self.min_frames_between_blinks, self.head_tilt_threshold
         )
+
+    @property
+    def history_data(self):
+        return {
+            "eye_openness": self.eye_openness_list,
+            "mouth_openness": self.mouth_openness_list,
+            "head_angle": self.head_angle_list,
+            "gaze_history": list(self.gaze_history),
+        }

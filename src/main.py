@@ -16,12 +16,14 @@ from FacialRecognition.feature_extraction import extract_features
 from FacialRecognition.output import draw_face_landmarks
 from FacialRecognition.output import write_results_to_frame
 from FacialRecognition.inference import FrameAnalyzer
+from FacialRecognition.Logger import CSVLogger
 import cv2 as cv
 
 
 def main(cap):
     detector = Detector()
     analyzer = FrameAnalyzer()
+    logger = CSVLogger()
 
     while cap.isOpened():
         success, frame = cap.read()
@@ -44,6 +46,7 @@ def main(cap):
                     frame = resize_frame(face, 1000, 1000)
 
                     frame = write_results_to_frame(cv.flip(frame, 1), analyzer.results)
+                    logger.maybe_log(analyzer.results)
 
         cv.imshow("FaceMesh Feed", frame)
 
