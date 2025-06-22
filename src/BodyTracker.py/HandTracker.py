@@ -25,6 +25,8 @@ cap = cv2.VideoCapture(0)
 prev_coords = None
 static_frames = 0
 total_frames = 0
+total_movement = 0
+high_activity_frames = 0
 start_time = time.time()
 
 print("📷 Tracking started... Press ESC to stop.")
@@ -52,8 +54,11 @@ while cap.isOpened():
                 abs(x1 - x2) + abs(y1 - y2)
                 for (x1, y1), (x2, y2) in zip(hand_coords, prev_coords)
             ])
+            total_movement += movement
             if movement < 0.01:
                 static_frames += 1
+            if movement > 0.1:
+                high_activity_frames += 1
         prev_coords = hand_coords
 
     total_frames += 1
@@ -68,6 +73,8 @@ cv2.destroyAllWindows()
 # === Final Static Ratio ===
 duration = int(time.time() - start_time)
 static_ratio = static_frames / total_frames if total_frames > 0 else 0.0
+total_movement = round(total_movement, 3)
+high_activity_ratio = high_activity_frames / total_frames if total_frames > 0 else 0.0
 
 # === Insert result into MongoDB ===
 entry = {
@@ -76,7 +83,13 @@ entry = {
     "timestamp": datetime.datetime.utcnow(),
     "duration_sec": duration,
     "hand_static_ratio": round(static_ratio, 3),
-    "feedback": f"Hands were still {round(static_ratio*100, 1)}% of the time."
+    "total_hand_movement": total_movement,
+    "high_activity_time_ratio": round(high_activity_ratio, 3),
+    "feedback": (
+        f"Hands were still {round(static_ratio*100, 1)}% of the time. "
+        f"Total movement: {total_movement}. "
+        f"High activity during {round(high_activity_ratio*100, 1)}% of frames."
+    )
 }
 
 collection.insert_one(entry)
