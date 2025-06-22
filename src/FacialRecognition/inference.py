@@ -39,7 +39,9 @@ class FrameAnalyzer:
         self.head_angle_list = []
 
         # Gaze tracking
-        self.gaze_history = deque(maxlen=30)  # Rolling window of recent gaze directions
+        self.gaze_history = deque(maxlen=30)
+
+        self.is_smiling = False
 
     @staticmethod
     def compute_distance(p1, p2):
@@ -86,6 +88,25 @@ class FrameAnalyzer:
         openness = self.compute_distance(coords[13], coords[14])
         self.mouth_openness_list.append(openness)
 
+    def euclidean_distance(self, p1, p2):
+        return np.linalg.norm(np.array(p1) - np.array(p2))
+
+    def detect_smile(self, coords):
+        left_lip = coords[61]
+        right_lip = coords[291]
+        top_lip = coords[13]
+        bottom_lip = coords[14]
+
+        horizontal_dist = self.euclidean_distance(left_lip, right_lip)
+        vertical_dist = self.euclidean_distance(top_lip, bottom_lip)
+
+        smile_ratio = horizontal_dist / vertical_dist
+
+        if smile_ratio > 3 and smile_ratio < 20:
+            self.is_smiling = True
+        else:
+            self.is_smiling = False
+
     def detect_gaze_direction(self, coords):
         def classify_eye_gaze(outer, inner, iris):
             eye_width = self.compute_distance(outer, inner)
@@ -118,6 +139,7 @@ class FrameAnalyzer:
         self.detect_head_tilt(coords)
         self.measure_mouth_openness(coords)
         self.detect_gaze_direction(coords)
+        self.detect_smile(coords)
 
         self.frame_counter += 1
 
@@ -163,6 +185,7 @@ class FrameAnalyzer:
             "Total Frames": self.frame_counter,
             "Blink Count": self.blink_counter,
             "Head Tilt Count": self.head_tilt_counter,
+            "Smiling": self.is_smiling,
             "Blink Frequency (per min)": round(
                 self.blink_counter / self.elapsed_minutes, 2
             ),
