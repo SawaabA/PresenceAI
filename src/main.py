@@ -39,15 +39,10 @@ def main(cap):
             if results.multi_face_landmarks:
                 for face_landmarks in results.multi_face_landmarks:
                     draw_face_landmarks(face, face_landmarks)
-                    features = extract_features(face_landmarks, face.shape)
-
                     analyzer.analyze_frame(face_landmarks, face.shape)
-
                     frame = resize_frame(face, 1000, 1000)
-
                     frame = write_results_to_frame(cv.flip(frame, 1), analyzer.results)
                     logger.maybe_log(analyzer.results)
-
         cv.imshow("FaceMesh Feed", frame)
 
         if cv.waitKey(1) & 0xFF == ord("q"):
