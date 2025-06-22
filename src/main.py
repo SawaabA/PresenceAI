@@ -42,7 +42,7 @@ def main(cap):
                     analyzer.analyze_frame(face_landmarks, face.shape)
                     frame = resize_frame(face, 1000, 1000)
                     frame = write_results_to_frame(cv.flip(frame, 1), analyzer.results)
-                    logger.maybe_log(analyzer.results)
+                    logger.log_results(analyzer.results)
         cv.imshow("FaceMesh Feed", frame)
 
         if cv.waitKey(1) & 0xFF == ord("q"):
