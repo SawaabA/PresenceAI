@@ -46,8 +46,8 @@ def write_results_to_frame(frame, traits, y=50):
             (10, y),
             cv.FONT_HERSHEY_SIMPLEX,
             1.1,
-            (0, 255, 255),
+            (0, 255, 0),
             2,
         )
-        y += 25
+        y += 50
     return frame
