@@ -53,5 +53,5 @@ def main(cap):
 
 
 if __name__ == "__main__":
-    cap = get_video_capture(1)
+    cap = get_video_capture(0)
     main(cap)

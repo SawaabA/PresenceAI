@@ -29,7 +29,7 @@ total_movement = 0
 high_activity_frames = 0
 start_time = time.time()
 
-print("🖐️ Hand Tracking started... Press ESC to stop.")
+print("Hand Tracking started... Press ESC to stop.")
 
 while cap.isOpened():
     success, frame = cap.read()
@@ -88,4 +88,4 @@ sessions.update_one(
     }}
 )
 
-print(f"✅ Hand tracking data added to MongoDB (session_id: {SESSION_ID})")
+print(f" Hand tracking data added to MongoDB (session_id: {SESSION_ID})")

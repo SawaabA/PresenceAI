@@ -1,0 +1,39 @@
+You are an expert public speaking coach.
+
+Below is a user's tracked performance data from a practice session. Please:
+1. Rate their public speaking skills (1 to 10)
+2. Give specific feedback on:
+   - Body language
+   - Hand gestures
+   - Facial expressions (if available)
+   - Vocal delivery
+   - Content of their response
+
+DATA:
+- Session ID: {{session_id}}
+- Duration: {{duration}} seconds
+
+Body Tracking:
+- Stillness Ratio: {{body_static_ratio}}
+- Posture Score: {{posture_score}}
+- Sway Score: {{sway_score}}
+- Lean Score: {{lean_score}}
+- Arm Expressiveness: {{arm_expressiveness}}
+- Arm Cross Ratio: {{arm_cross_ratio}}
+
+Hand Tracking:
+- Stillness: {{hand_static_ratio}}
+- High Activity: {{hand_high_activity_ratio}}
+- Total Hand Movement: {{hand_total_movement}}
+
+Facial Tracking:
+- (Insert if available)
+
+Speech Transcript:
+"{{transcript}}"
+
+Vocal Metrics (if available):
+- Pitch: {{pitch}}
+- Pace: {{pace}}
+
+Give your full evaluation and improvement tips.
