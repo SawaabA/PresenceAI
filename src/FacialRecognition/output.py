@@ -42,7 +42,7 @@ def write_results_to_frame(frame, traits, y=50):
     for trait, score in traits.items():
         cv.putText(
             frame,
-            f"{trait}: {score:.2f}",
+            f"{trait}: {score}",
             (10, y),
             cv.FONT_HERSHEY_SIMPLEX,
             1.0,

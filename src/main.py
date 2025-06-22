@@ -16,11 +16,13 @@ from FacialRecognition.feature_extraction import extract_features
 from FacialRecognition.output import draw_face_landmarks
 from FacialRecognition.inference import analyze_behavior
 from FacialRecognition.output import write_results_to_frame
+from FacialRecognition.feature_extraction import FrameAnalyzer
 import cv2 as cv
 
 
 def main(cap):
     detector = Detector()
+    analyzer = FrameAnalyzer()
 
     while cap.isOpened():
         success, frame = cap.read()
@@ -31,17 +33,18 @@ def main(cap):
         face = detector.detect_face(frame)
 
         if face is not None:
-
             results = detector.process_face(face)
 
             if results.multi_face_landmarks:
                 for face_landmarks in results.multi_face_landmarks:
                     draw_face_landmarks(face, face_landmarks)
                     features = extract_features(face_landmarks, face.shape)
-                    traits = analyze_behavior(features)
+
+                    analyzer.analyze_frame(face_landmarks, face.shape)
 
                     frame = resize_frame(face, 1000, 1000)
-                    frame = write_results_to_frame(cv.flip(frame, 1), traits)
+
+                    frame = write_results_to_frame(cv.flip(frame, 1), analyzer.results)
 
         cv.imshow("FaceMesh Feed", frame)
 
