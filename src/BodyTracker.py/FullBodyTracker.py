@@ -3,17 +3,27 @@ import mediapipe as mp
 import numpy as np
 import os
 import datetime
-from dotenv import load_dotenv
 from pymongo import MongoClient
 
-# === Load API keys from Keys.txt ===
-load_dotenv("Keys.txt")
-MONGO_URI = os.getenv("MONGO_URI")
-
 # === Connect to MongoDB ===
+MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
 db = client["presenceAI"]
-collection = db["body_language_feedback"]
+sessions = db["sessions"]
+
+# === Create a new session with unique session_id ===
+USER_ID = "sawaab"
+SESSION_ID = f"session_{int(datetime.datetime.now().timestamp())}"
+sessions.insert_one({
+    "session_id": SESSION_ID,
+    "user_id": USER_ID,
+    "timestamp": datetime.datetime.now(datetime.timezone.utc),
+    "duration_sec": 0,
+    "hand_tracking": {},
+    "body_tracking": {},
+    "facial_tracking": {},
+    "speech_analysis": {}
+})
 
 # === Initialize MediaPipe Pose ===
 mp_drawing = mp.solutions.drawing_utils
@@ -30,10 +40,6 @@ static_frame_count = 0
 total_frames = 0
 bounce_score = 0
 prev_positions = None
-sway_score = 0
-lean_score = 0
-arm_expressiveness = 0
-arm_cross_frames = 0
 
 print("📷 Tracking started... Press ESC to stop.")
 
@@ -73,28 +79,8 @@ while cap.isOpened():
         l_shoulder = lm[mp_pose.PoseLandmark.LEFT_SHOULDER.value]
         r_shoulder = lm[mp_pose.PoseLandmark.RIGHT_SHOULDER.value]
         mid_y = (l_shoulder.y + r_shoulder.y) / 2
-        bounce = abs(mid_y - 0.5)
+        bounce = abs(mid_y - 0.5)  # 0.5 is arbitrary center
         bounce_score += bounce
-
-        # Body sway
-        mid_x = (l_shoulder.x + r_shoulder.x) / 2
-        sway_score += abs(mid_x - 0.5)
-
-        # Forward/backward lean
-        l_hip = lm[mp_pose.PoseLandmark.LEFT_HIP.value]
-        r_hip = lm[mp_pose.PoseLandmark.RIGHT_HIP.value]
-        torso_y = (l_hip.y + r_hip.y + l_shoulder.y + r_shoulder.y) / 4
-        lean_score += abs(torso_y - 0.5)
-
-        # Arm movement expressiveness
-        l_elbow = lm[mp_pose.PoseLandmark.LEFT_ELBOW.value]
-        r_elbow = lm[mp_pose.PoseLandmark.RIGHT_ELBOW.value]
-        arm_range = abs(l_elbow.y - r_elbow.y)
-        arm_expressiveness += arm_range
-
-        # Arm cross detection (if elbows are inward of shoulders)
-        if (l_elbow.x > l_shoulder.x) and (r_elbow.x < r_shoulder.x):
-            arm_cross_frames += 1
 
     total_frames += 1
     cv2.imshow('PresenceAI - Full Body Tracking', image)
@@ -108,31 +94,17 @@ cv2.destroyAllWindows()
 # === Feedback Logic ===
 static_ratio = static_frame_count / total_frames if total_frames else 0
 bounce_avg = bounce_score / total_frames if total_frames else 0
-sway_avg = sway_score / total_frames if total_frames else 0
-lean_avg = lean_score / total_frames if total_frames else 0
-arm_express_avg = arm_expressiveness / total_frames if total_frames else 0
-arm_cross_ratio = arm_cross_frames / total_frames if total_frames else 0
 
-feedback_entry = {
-    "user_id": "default_user",
-    "speech_id": "speech_001",
-    "timestamp": datetime.datetime.now(datetime.timezone.utc),
-    "duration_sec": total_frames / 30,
-    "body_static_ratio": round(static_ratio, 3),
-    "posture_score": round(bounce_avg, 3),
-    "sway_score": round(sway_avg, 3),
-    "lean_score": round(lean_avg, 3),
-    "arm_expressiveness": round(arm_express_avg, 3),
-    "arm_cross_ratio": round(arm_cross_ratio, 3),
-    "feedback": (
-        f"Still: {round(static_ratio*100)}%, "
-        f"Posture: {round(bounce_avg, 3)}, "
-        f"Sway: {round(sway_avg, 3)}, "
-        f"Lean: {round(lean_avg, 3)}, "
-        f"Arm Move: {round(arm_express_avg, 3)}, "
-        f"Arm Crossed: {round(arm_cross_ratio*100)}%"
-    )
-}
+# === Update session document ===
+sessions.update_one(
+    {"session_id": SESSION_ID},
+    {"$set": {
+        "duration_sec": round(total_frames / 30, 2),
+        "body_tracking": {
+            "body_static_ratio": round(static_ratio, 3),
+            "posture_score": round(bounce_avg, 3)
+        }
+    }}
+)
 
-collection.insert_one(feedback_entry)
-print("✅ Full-body feedback saved to MongoDB!")
+print(f"✅ Body tracking data added to MongoDB (session_id: {SESSION_ID})")
