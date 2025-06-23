@@ -33,9 +33,9 @@ Choose a mode based on your communication goals:
 ![www](https://github.com/user-attachments/assets/3a96da30-1906-4be4-91f3-59389862d36b)
 
 ### 📈 Progress Tracking
-####- Session history and trends
-####- Monthly performance gains
-####- Goal setting and achievements
+#### - Session history and trends
+#### - Monthly performance gains
+#### - Goal setting and achievements
 
 ![wwww](https://github.com/user-attachments/assets/d0070216-ad31-448d-8cfb-263aaff46cb6)
 
