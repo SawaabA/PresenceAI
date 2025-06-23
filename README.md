@@ -24,15 +24,19 @@ https://github.com/user-attachments/assets/9ffa6d15-d783-46d5-b986-5f56abcb97c0
 
 ### 🧠 Targeted Practice Modes
 Choose a mode based on your communication goals:
-- **Speech Practice** (1, 5, or 10 minutes – script optional)
-- **Interview Prep** (Industry-specific questions)
-- **Conversation Analysis** (Free-form natural conversation)
+#### - **Speech Practice** (1, 5, or 10 minutes – script optional)
+#### - **Interview Prep** (Industry-specific questions)
+#### - **Conversation Analysis** (Free-form natural conversation)
+
+![Screenshot 2025-06-23 021829](https://github.com/user-attachments/assets/dc256a97-cfae-4491-824d-28172ffe61da)
+
 ![www](https://github.com/user-attachments/assets/3a96da30-1906-4be4-91f3-59389862d36b)
 
 ### 📈 Progress Tracking
-- Session history and trends
-- Monthly performance gains
-- Goal setting and achievements
+####- Session history and trends
+####- Monthly performance gains
+####- Goal setting and achievements
+
 ![wwww](https://github.com/user-attachments/assets/d0070216-ad31-448d-8cfb-263aaff46cb6)
 
 ---
