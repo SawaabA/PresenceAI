@@ -56,6 +56,7 @@ We’re especially proud of the teamwork, learning, and creativity that fueled t
 Special thanks to my amazing teammates:  
  [Jashan Singh](https://www.linkedin.com/in/jashansingh65/)  
  Kole – Instagram: [@kdr47101](https://www.instagram.com/kdr47101)
+ Ajay Reddy
 
 This is just the beginning — more updates and polishing coming soon!
 
