@@ -9,7 +9,7 @@ PresenceAI is a tri-modal AI-powered communication coach that analyzes your **sp
 
 ## 🌟 Features
 
-### 🎯 AI-Powered Analytics
+###  AI-Powered Analytics
 Gain deep insight into your communication with real-time metrics:
 - **Speech Clarity**
 - **Body Language Score**
@@ -22,7 +22,7 @@ Gain deep insight into your communication with real-time metrics:
 https://github.com/user-attachments/assets/9ffa6d15-d783-46d5-b986-5f56abcb97c0
 
 
-### 🧠 Targeted Practice Modes
+###  Targeted Practice Modes
 Choose a mode based on your communication goals:
 #### - **Speech Practice** (1, 5, or 10 minutes – script optional)
 #### - **Interview Prep** (Industry-specific questions)
@@ -32,7 +32,7 @@ Choose a mode based on your communication goals:
 
 ![www](https://github.com/user-attachments/assets/3a96da30-1906-4be4-91f3-59389862d36b)
 
-### 📈 Progress Tracking
+###  Progress Tracking
 #### - Session history and trends
 #### - Monthly performance gains
 #### - Goal setting and achievements
@@ -63,7 +63,7 @@ This is just the beginning — more updates and polishing coming soon!
 
 ---
 
-## 🧰 Tech Stack
+##  Tech Stack
 
 | Layer              | Technology                                  |
 |-------------------|----------------------------------------------|
@@ -76,7 +76,7 @@ This is just the beginning — more updates and polishing coming soon!
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
